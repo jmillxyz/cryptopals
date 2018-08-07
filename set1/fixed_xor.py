@@ -13,24 +13,20 @@ after hex decoding, and when XOR'd against:
 should produce:
 746865206b696420646f6e277420706c6179
 """
-
-import base64
+import binascii
 import sys
-
-from hex_to_base64 import hex_to_b64
 
 
 def xor_buffers(buf1, buf2):
-    b64_buf1 = hex_to_b64(buf1)
-    b64_buf2 = hex_to_b64(buf2)
+    byte_buf1 = bytes.fromhex(buf1)
+    byte_buf2 = bytes.fromhex(buf2)
 
-    b64_list1 = [c for c in b64_buf1]
-    b64_list2 = [c for c in b64_buf2]
+    byte_list1 = [c for c in byte_buf1]
+    byte_list2 = [c for c in byte_buf2]
 
-    b64_xor_list = [a ^ b for a, b in zip(b64_list1, b64_list2)]
+    xord_bytes = bytes([a ^ b for a, b in zip(byte_list1, byte_list2)])
 
-    hex_xor = "".join(b64_xor_list)
-    print(hex_xor)
+    return binascii.hexlify(xord_bytes)
 
 
 if __name__ == "__main__":
