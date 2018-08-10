@@ -52,7 +52,9 @@ def decrypt_single_byte(hex_str):
         "z": .7,
     }
 
-    max_score = 0
+    # scoring = dict(zip("etaoinshrdlcumwfgypbvkjxqz", list(range(26, 0, -1))))
+
+    max_score = 0.0
     key = ""
     phrase = b""
     for c in range(255, 0, -1):
