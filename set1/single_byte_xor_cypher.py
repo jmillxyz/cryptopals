@@ -22,21 +22,48 @@ import sys
 def decrypt_single_byte(hex_str):
     byte_str = bytes.fromhex(hex_str)
 
-    # create scoring dict ranked by frequency
-    scoring = dict(zip(b"etaoinshrdlcumwfgypbvkjxqz",list(range(26,0,-1))))
+    # create scoring dict ranked by frequency, based on wikipedia
+    scoring = {
+        "e": 1.270,
+        "t": .906,
+        "a": .817,
+        "o": .751,
+        "i": .697,
+        "n": .675,
+        "s": .633,
+        "h": .609,
+        "r": .599,
+        "d": .425,
+        "l": .403,
+        "c": .278,
+        "u": .276,
+        "m": .241,
+        "w": .236,
+        "f": .223,
+        "g": .202,
+        "y": .197,
+        "p": .193,
+        "b": .149,
+        "v": .98,
+        "k": .77,
+        "j": .15,
+        "x": .15,
+        "q": .10,
+        "z": .7,
+    }
 
     max_score = 0
     key = ""
     phrase = b""
-    for c in range(ord("A"), ord("Z")):
+    for c in range(255, 0, -1):
         decoded_phrase = bytes([b ^ c for b in byte_str])
-        score = sum([scoring.get(d, 0) for d in decoded_phrase.lower()])
+        score = sum([scoring.get(chr(d), 0) for d in decoded_phrase.lower()])
         if score > max_score:
             max_score = score
             phrase = decoded_phrase
             key = chr(c)
-    print(f"decryption key: {key}")
-    print("phrase: ", end="")
+
+    print(key, end="::")
     print(phrase)
 
 
