@@ -54,7 +54,6 @@ def decrypt_single_byte(hex_str):
     byte_str = bytes.fromhex(hex_str)
 
     max_score = 0.0
-    key = ""
     phrase = ""
     for c in range(256):
         decoded_phrase = bytes([b ^ c for b in byte_str])
@@ -62,7 +61,6 @@ def decrypt_single_byte(hex_str):
         if score > max_score:
             max_score = score
             phrase = decoded_phrase
-            key = chr(c)
     try:
         return phrase.decode("utf-8")
     except UnicodeDecodeError:

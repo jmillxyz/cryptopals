@@ -1,6 +1,6 @@
 import pytest
 
-from set1 import ch1, ch2, ch3, ch4, ch5
+from set1 import ch1, ch2, ch3, ch4, ch5, ch6
 
 
 def test_ch1():
@@ -44,3 +44,10 @@ def test_ch5():
     )
 
     assert ch5.repeating_xor(plaintext) == expected
+
+
+def test_ch6():
+    str1 = "this is a test"
+    str2 = "wokka wokka!!!"
+
+    assert ch6.hamming_distance(str1, str2) == 37
