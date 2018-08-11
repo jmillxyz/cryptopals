@@ -22,7 +22,7 @@ import sys
 def hex_to_b64(hex_str):
     byte_str = bytes.fromhex(hex_str)
     b64_str = base64.b64encode(byte_str)
-    return b64_str
+    return b64_str.decode("utf-8")
 
 
 if __name__ == "__main__":

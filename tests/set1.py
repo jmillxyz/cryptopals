@@ -1,10 +1,6 @@
 import pytest
 
-import hex_to_base64
-import fixed_xor
-import single_byte_xor_cypher
-import detect_single_byte_xor
-import repeating_key_xor
+from set1 import ch1, ch2, ch3, ch4, ch5
 
 
 def test_ch1():
@@ -14,7 +10,7 @@ def test_ch1():
     )
     base_64_str = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
 
-    assert hex_to_base64.hex_to_b64(hex_str) == base_64_str
+    assert ch1.hex_to_b64(hex_str) == base_64_str
 
 
 def test_ch2():
@@ -22,20 +18,20 @@ def test_ch2():
     hex2 = "686974207468652062756c6c277320657965"
     expected = "746865206b696420646f6e277420706c6179"
 
-    assert fixed_xor.xor_buffers(hex1, hex2) == expected
+    assert ch2.xor_buffers(hex1, hex2) == expected
 
 
 def test_ch3():
     hex_str = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     plaintext = "Cooking MC's like a pound of bacon"
 
-    assert single_byte_xor_cypher.decrypt_single_byte(hex_str) == plaintext
+    assert ch3.decrypt_single_byte(hex_str) == plaintext
 
 
 def test_ch4():
-    plaintext = "Now that the part is jumping\n"
+    plaintext = "Now that the party is jumping\n"
 
-    assert detect_single_byte_xor.decrypt_strings_in_file("4.txt") == plaintext
+    assert ch4.decrypt_strings_in_file("set1/4.txt") == plaintext
 
 
 def test_ch5():
@@ -47,4 +43,4 @@ def test_ch5():
         "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
     )
 
-    assert repeating_key_xor.repeating_xor(plaintext) == expected
+    assert ch5.repeating_xor(plaintext) == expected

@@ -26,7 +26,7 @@ def xor_buffers(buf1, buf2):
 
     xord_bytes = bytes([a ^ b for a, b in zip(byte_list1, byte_list2)])
 
-    return binascii.hexlify(xord_bytes)
+    return binascii.hexlify(xord_bytes).decode("utf-8")
 
 
 if __name__ == "__main__":
