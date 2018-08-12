@@ -46,8 +46,70 @@ def test_ch5():
     assert ch5.repeating_xor(plaintext) == expected
 
 
-def test_ch6():
+def test_ch6_hamming():
     str1 = "this is a test"
     str2 = "wokka wokka!!!"
 
     assert ch6.hamming_distance(str1, str2) == 37
+
+    # multi-hamming should be the same
+    assert ch6.multi_hamming(str1, str2) == 37
+
+
+def test_ch6_nCk():
+    """n choose k tests
+
+    example:
+    of combos = n choose k, in this case 4 choose 2
+              = n! / (k! * (n - k)!)
+              = 4! / (2! * (4 - 2)!)
+              = 24 / (2  * (2)!)
+              = 24 / 4
+              = 6
+    """
+    assert ch6.nCk(2, 2) == 1
+    assert ch6.nCk(3, 2) == 3
+    assert ch6.nCk(4, 2) == 6
+
+
+@pytest.mark.parametrize(
+    "keysize,chunk_num,expected",
+    [
+        (2, 0, "ab"),
+        (2, 1, "cd"),
+        (2, 2, "ef"),
+        (2, 3, "gh"),
+        (3, 0, "abc"),
+        (3, 1, "def"),
+        (3, 2, "ghi"),
+    ],
+)
+def test_ch6_get_chunk(keysize, chunk_num, expected):
+    text = "abcdefghi"
+
+    ch6.get_chunk(text, keysize, chunk_num) == expected
+
+
+def test_ch6_multi_hamming():
+    """ multi-hamming testing
+
+    "a" = 01100001
+    "b" = 01100010
+    "c" = 01100011
+    "d" = 01100100
+
+    ($ == hamming_distance below)
+    a $ b = 2
+    a $ c = 1
+    a $ d = 2
+
+    b $ c = 1
+    b $ d = 2
+
+    c $ d = 3
+
+    total = 11
+    nCk(4,2) = 6
+    avg = 11/6
+    """
+    assert ch6.multi_hamming("a", "b", "c", "d") == 11 / 6

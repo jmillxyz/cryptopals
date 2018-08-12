@@ -47,11 +47,19 @@ repeating-key XOR ("Vigenere") statistically is obviously an academic exercise, 
 and a similar technique breaks something much more important.
 """
 
+import math
+import sys
+
+
+def get_bits(a_str):
+    """Represent each letter as 8 bits, 0-padded from left"""
+    return "".join("{:0>8b}".format(ord(c)) for c in a_str)
+
 
 def hamming_distance(str1, str2):
-    # represent each letter as 8 bits, 0-padded from left
-    b1 = "".join("{:0>8b}".format(ord(c)) for c in str1)
-    b2 = "".join("{:0>8b}".format(ord(c)) for c in str2)
+    """Get # of different bits between two equal-length strings"""
+    b1 = get_bits(str1)
+    b2 = get_bits(str2)
 
     diff_count = 0
     for i in range(len(b1)):
@@ -61,9 +69,55 @@ def hamming_distance(str1, str2):
     return diff_count
 
 
-def break_repeating_xor():
-    pass
+def nCk(n, k):
+    """How many combinations of n items exist when choosing k?"""
+    f = math.factorial
+    return f(n) // (f(k) * f(n - k))
+
+
+def multi_hamming(*args):
+    """Compute HD combinations for each pair of args, then average them"""
+    if len(args) <= 1:
+        raise "I only see {len(args)} argument(s). Need more!"
+
+    else:
+        total_dist = 0
+        for i in range(0, len(args) - 1):
+            for j in range(i + 1, len(args)):
+                total_dist += hamming_distance(args[i], args[j])
+        average = total_dist / nCk(len(args), 2)
+        return average
+
+
+def get_chunk(ct, keysize, window):
+    """Get a chunk (window #) of a ciphertext"""
+    return ct[window * keysize : (window + 1) * keysize]
+
+
+def determine_keysize(ct):
+    """Determine the keysize to which has the smallest avg hamming distance"""
+    normalized_dists = {}
+    for k in range(2, 41):
+        chunk0 = get_chunk(ct, k, 0)
+        chunk1 = get_chunk(ct, k, 1)
+        chunk2 = get_chunk(ct, k, 2)
+        chunk3 = get_chunk(ct, k, 3)
+        dist = multi_hamming(chunk0, chunk1, chunk2, chunk3) / k
+        normalized_dists[k] = dist
+    sorted_dists = sorted(normalized_dists.items(), key=lambda x: x[1])
+    for key, val in sorted_dists:
+        print(key, val)
+
+    # keysize is the first element of the first tuple
+    return sorted_dists[0][0]
+
+
+def break_repeating_xor(ct_file):
+    with open(ct_file, "r") as f:
+        ciphertext = f.read()
+        keysize = determine_keysize(ciphertext)
+    print(keysize)
 
 
 if __name__ == "__main__":
-    break_repeating_xor()
+    break_repeating_xor(sys.argv[1])
