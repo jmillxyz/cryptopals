@@ -113,3 +113,14 @@ def test_ch6_multi_hamming():
     avg = 11/6
     """
     assert ch6.multi_hamming("a", "b", "c", "d") == 11 / 6
+
+
+@pytest.mark.parametrize(
+    "test_str,keysize,expected",
+    [
+        ("abcdefghi", 3, ["abc", "def", "ghi"]),
+        ("12345678901234567890", 4, ["1234", "5678", "9012", "3456", "7890"]),
+    ],
+)
+def test_ch6_break_ct_into_blocks(test_str, keysize, expected):
+    assert ch6.break_ciphertext_into_blocks(test_str, keysize) == expected

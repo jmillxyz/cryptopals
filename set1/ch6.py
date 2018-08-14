@@ -112,11 +112,20 @@ def determine_keysize(ct):
     return sorted_dists[0][0]
 
 
+def break_ciphertext_into_blocks(ct, keysize):
+    """Break up the ciphertext into blocks of size keysize"""
+    ct_blocks = []
+    num_blocks = len(ct) // keysize  # divide ct up into chunks of size keysize...
+    for b in range(num_blocks):
+        ct_blocks.append(get_chunk(ct, keysize, b))
+    return ct_blocks
+
+
 def break_repeating_xor(ct_file):
     with open(ct_file, "r") as f:
-        ciphertext = f.read()
-        keysize = determine_keysize(ciphertext)
-    print(keysize)
+        ct = f.read()
+    keysize = determine_keysize(ct)
+    ct_blocks = break_ciphertext_into_blocks(ct, keysize)
 
 
 if __name__ == "__main__":
